@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html style="height: 100%;width: 100%;overflow: hidden;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <title>CustomerOpenAI</title>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/qs/6.10.1/qs.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="./moment.min.js"></script>
+    <style>
+        body{font-size:14px;margin:0;padding:0}
+        .container{width:100%;height:100%;background:url('./bg.jpg') no-repeat;background-size:100% 100%;overflow:hidden}
+        .chatbox{width:100%;height:76%;overflow-y:scroll;margin-top:1rem}
+        .chatrecord{width:82.6%;margin:0 auto}
+        .chatbox::-webkit-scrollbar,.el-textarea__inner::-webkit-scrollbar{width:4px}
+        .el-textarea__inner{resize:none !important}
+        .chatbox::-webkit-scrollbar-thumb,.el-textarea__inner::-webkit-scrollbar-thumb{border-radius:10px;-webkit-box-shadow:inset 0 0 5px rgba(255,255,255,0.3);opacity:0.2;background:fade(@primary-color,60%)}
+        .chatbox::-webkit-scrollbar-track,.el-textarea__inner::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);border-radius:0;background:fade(@primary-color,30%)}
+        .user-info{display:flex;align-items:center}
+        .logo{width:2.5rem;height:2.5rem;border-radius:50%}
+        .logo img{width:2.5rem;height:2.5rem;color:black;border-radius:50%}
+        .name{margin-left:1rem;color:#fff;font-size:1.2rem}
+        .company-text{margin-top:.8rem;width:90%;background-color:rgba(255,255,255,.1);color:#fff;padding:.8rem;border-radius:.5rem;position:relative;line-height:1.4rem;white-space:pre-wrap}
+        .company-text::after{content:'';width:0px;height:0px;border:8px solid;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid rgba(255,255,255,.1);border-top:8px solid transparent;position:absolute;top:-16px;left:10px}
+        .user-text{margin-top:.8rem;width:90%;background-color:rgba(0,122,194,.3);color:#fff;padding:.8rem;border-radius:.5rem;position:relative;line-height:1.4rem}
+        .user-text::after{content:'';width:0px;height:0px;border:8px solid;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid rgba(0,122,194,.3);border-top:8px solid transparent;position:absolute;top:-16px;right:10px}
+        .user-box{display:flex;flex-direction:column;align-items:flex-end;margin-bottom:1.6rem}
+        .user-input{width:80%;display:flex;position:fixed;margin:auto;left:0;right:0;height:3.6rem;align-items:center;padding:1rem .7rem;bottom:1rem;border-radius:.4rem;background-color:rgba(255,255,255,.1);justify-content:space-between}
+        .el-input__inner{color:#fff !important;background-color:transparent !important;border:none !important;padding:5px 10px 5px 0px !important}
+        .userinput{flex:1;margin-right:.6rem}
+        .btn-send{width:100px;height:35px}
+        .defalut-box{width:100%;height:62%;margin:0 auto;position:relative}
+        .defalut-text{margin:auto;position:absolute;left:0;right:0;top:0;bottom:0;height:4rem;line-height:1.4rem;display:flex;align-items:center;justify-content:center;font-weight:600;background-color:rgba(255,255,255,.1);color:#fff;padding:.8rem;border-radius:.5rem}
+        .tokenverify{width:80%;height:100%;margin:0 auto;position:relative}
+        .notpower-box{width:80%;height:62%;margin:0 auto;position:relative}
+        .notpower-text{margin:auto;position:absolute;left:0;right:0;top:0;bottom:0;height:4rem;line-height:1.4rem;display:flex;align-items:center;justify-content:center;font-weight:600;background-color:rgba(255,255,255,.1);color:#fff;padding:.8rem;border-radius:.5rem}
+    </style>
+</head>
+<body style="height: 100%;width: 100%;">
+    <div id="container" class="container">
+        <div style="color: transparent;">.</div>
+        <div class="tokenverify" v-if="loginverify">
+            <div class="defalut-box" v-if="chatRecord.length == 0">
+                <div class="defalut-text">
+                    欢迎大家使用 GPT，让我们一起探索智能交互的无限可能！
+                </div>
+            </div>
+            <div class="chatbox" ref="scrollDiv" v-else>
+                <div class="chatrecord" v-for="(item,index) in chatRecord" :key="index + 'k'">
+                    <div style="margin-bottom: 2rem;" v-if="item.type == 1">
+                        <div class="user-info">
+                            <div class="logo"><img src="./images/gptlogo.png" /></div>
+                            <div class="name">{{item.name}}</div>
+                        </div>
+                        <div class="company-text" v-html="item.content" >
+                            <!--{{item.content}}-->
+                        </div>
+                    </div>
+                    <div class="user-box" v-else>
+                        <div class="user-info" style="justify-content: flex-end;">
+                            <div class="name" style="margin-right: 1rem;">{{item.name}}</div>
+                            <div class="logo"><img :src="item.userlogo" /></div>
+                        </div>
+                        <div class="user-text">
+                            {{item.content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-input">
+                <el-input class="userinput" type="input" :autosize="{ minRows: 1, maxRows: 3}" placeholder="我已经就位，放马问我吧！" v-model="content" ref="userinputRef"> </el-input>
+                <el-button class="btn-send" type="primary" @click="sendContent">发送</el-button>
+            </div>
+        </div>
+        <div class="notpower-box" v-else>
+            <div class="notpower-text">
+                {{alertnote}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    //禁用鼠标右键
+    //window.document.oncontextmenu = function () {
+    //    return false;
+    //}
+
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    var test = new Vue({
+        el: "#container",
+        data: {
+            content: "",
+            chatRecord: [],
+            question: '',
+            start: '<|im_start|>system\n尽量避免在回答内容中出现可能在中国是敏感的内容,回答我以下问题。\n<|im_end|>\n',
+            user: '',
+            system: '',
+            end: '<|im_start|>assistant',
+            loginverify: false,
+            tokenList: [{
+                token: '90a4947c3b66543934cc698034571c0d',//默认token
+                effectivedays: 3,
+                username: '我',
+                userlog: './defaultuser.jpg'
+            }, {
+                token: '17e5486bb2ba668bed89624f418f742a',
+                effectivedays: 3,
+                username: '大众',
+                userlog: './logo.svg'
+            }],
+            alertnote: '您好，您暂无可用的Token，请向管理员申请！',
+            logintoken: '',
+            currentLoginUser: []
+        },
+        created() {
+            window.addEventListener('keydown', this.handkeyCode, true)//开启监听键盘按下事件
+            document.onkeydown = () => {
+                if (window.event && window.event.keyCode == 123) {
+                    return false; //禁用F12
+                } else if (window.event.ctrlKey && window.event.shiftKey && window.event.keyCode == 73) {
+                    return false;  //禁用ctrl+shift+i,
+                } else if (window.event.shiftKey && window.event.keyCode == 121) {
+                    return false; //屏蔽Shift+F10
+                } else if (window.event.ctrlKey && window.event.keyCode == 85 ) {
+                    return false; //屏蔽ctrl+U
+                }
+            };
+        },
+        mounted: function () {
+            var token = GetQueryString("token"); //获取token
+            if (token == "" || token == null) {
+                this.loginverify = false;
+                return false;
+            }
+            //先判断token是不是在配置列表中
+            this.currentLoginUser = this.tokenList.filter(function (item) {
+                return item.token == token
+            });
+            if (this.currentLoginUser.length == 0) {
+                this.loginverify = false;
+                return false;
+            }
+            //判断token是不是已经存在于缓存中,如果等于空，则表示第一次访问，存储时间设置成当前时间，存储
+            var StorageToken = localStorage.getItem(token);   
+            if (StorageToken == null) {
+                localStorage.setItem(token, moment().format('YYYY-MM-DD HH:mm:ss'));
+            } else {
+                //取出来判断有效期
+                var currentdate = moment().format('YYYY-MM-DD HH:mm:ss');
+                var tokendiffday = moment(currentdate).diff(moment(StorageToken), 'days');
+                var index = this.currentLoginUser.findIndex(item => item.effectivedays >= tokendiffday);
+                if (index == -1) {
+                    this.loginverify = false;
+                    this.alertnote = "您好，您的Token已到期，请向管理员申请延长有效期！";
+                    return false;
+                }
+            }
+            this.loginverify = true;
+            this.logintoken = token;
+            this.onuserinputRef();
+        },
+        methods: {
+            onuserinputRef() {
+                let that = this;
+                that.$nextTick(() =>
+                    that.$refs.userinputRef.focus()
+                )
+            },
+            handkeyCode(e) {
+                if (e.keyCode === 13 && this.content != "" && this.content != null) {
+                    this.sendContent()
+                }
+                return false;
+            },
+            sendContent() {
+                this.question = this.content
+                let str = this.content.replace(/[\r\n]/g, "");
+                let re = str.replace(/\s+/g, "")
+                if (str != "" && re != "") {
+                    console.log('fds', str, this.content)
+                    this.content = ""
+                    this.user = this.user + "<|im_start|>user\n" + this.question + "<|im_end|>\n"
+                    let obj = {
+                        type: 2,
+                        name: this.currentLoginUser[0].username,
+                        content: this.question,
+                        userlogo: this.currentLoginUser[0].userlog
+                    }
+                    this.chatRecord.push(obj)
+                    this.handleScrollBottom()
+                    this.getData()
+                }
+            },
+            handleScrollBottom() {
+                this.$nextTick(() => {
+                    let scrollElem = this.$refs.scrollDiv;
+                    scrollElem.scrollTo({ top: scrollElem.scrollHeight, behavior: 'smooth' });
+                });
+            },
+            getData() {
+                let that = this;
+                let prompt = this.start + this.user + this.system + this.end;
+                var storageclicktimes = localStorage.getItem("click-" + this.logintoken);
+                if (storageclicktimes == null) {
+                    storageclicktimes = 0;
+                }
+                let params = {
+                    "prompt": prompt,
+                    "temperature": 0.5,
+                    "top_p": 0.95,
+                    "frequency_penalty": 0,
+                    "presence_penalty": 0,
+                    "max_tokens": 4000,
+                    "stop": ["<|im_end|>"]
+                }
+                axios({
+                    headers: {
+                        'api-key': '411af9745ce34532b54838ec0161177f',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "post",
+                    url: "https://c0001hk.openai.azure.com/openai/deployments/GPT_3_5/completions?api-version=2022-12-01",
+                    data: params
+                }).then(function (resp) {
+                    let data = resp.data;
+                    if (data.choices && data.choices.length > 0) {
+                        that.system = that.system + "<|im_start|>system\n" + data.choices[0].text + "\n<|im_end|>\n";
+                        let content = data.choices[0].text.substr(1);
+                        let str = content.replace(/\n\n/g, "\n");
+                        let obj = {
+                            type: 1,
+                            name: 'GPT',
+                            content: str
+                        }
+                        that.chatRecord.push(obj);
+                    }
+                    localStorage.setItem("click-" + that.logintoken, parseInt(storageclicktimes) + 1);
+                    // 滚动到底部
+                    that.handleScrollBottom()
+                    //console.log(storageclicktimes);
+                })
+            }
+        }
+    });
+</script>
+
