@@ -138,7 +138,7 @@
             loginverify: false,
             tokenList: [{
                 token: '90a4947c3b66543934cc698034571c0d',//默认token
-                effectivedays: 3,
+                effectivedays: 365,
                 username: '我',
                 userlog: './defaultuser.jpg'
             }, {
@@ -146,6 +146,11 @@
                 effectivedays: 3,
                 username: '大众',
                 userlog: './logo.svg'
+            }, {
+                token: '58dcf62a78a5499d-b21596125279f3b3',
+                effectivedays: 7,
+                username: '联化科技',
+                userlog: './defaultuser.jpg'
             }],
             alertnote: '您好，您暂无可用的Token，请向管理员申请！',
             logintoken: '',
@@ -261,7 +266,7 @@
 				let index = that.chatRecord.length - 1
                 axios({
                     headers: {
-                        'api-key': '411af9745ce34532b54838ec0161177f',
+                        'api-key': 'e45c30474e2e421d9b621526e5cef5c7',
                         'Content-Type': 'application/json'
                     },
                     method: "post",
