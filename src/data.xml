@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tokenList>
+  <item open_id="124" name="XXX"/> -->
+  <tokenInfo token="90a4947c3b66543934cc698034571c0d">
+	<logintime>2023-04-10 14:00:20</logintime>
+	<token>90a4947c3b66543934cc698034571c0d</token>
+	<effectivedays>3655</effectivedays>
+	<username>我</username>
+	<userlog>../defaultuser.jpg</userlog>
+  </tokenInfo>
+  <tokenInfo token="17e5486bb2ba668bed89624f418f742a">
+  	<logintime>2023-04-06 00:00:00</logintime>
+  	<token>17e5486bb2ba668bed89624f418f742a</token>
+  	<effectivedays>3</effectivedays>
+  	<username>大众</username>
+  	<userlog>../logo.svg</userlog>
+  </tokenInfo>
+  <tokenInfo token="58dcf62a78a5499d-b21596125279f3b3">
+  	<logintime>2023-04-06 12:00:00</logintime>
+  	<token>58dcf62a78a5499d-b21596125279f3b3</token>
+  	<effectivedays>7</effectivedays>
+  	<username>联化科技</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
+ <tokenInfo token="c164bdece9c546baa10972af229274c3">
+  	<logintime>2023-04-06 00:00:00</logintime>
+  	<token>c164bdece9c546baa10972af229274c3</token>
+  	<effectivedays>7</effectivedays>
+  	<username>南洋</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
+</tokenList>
