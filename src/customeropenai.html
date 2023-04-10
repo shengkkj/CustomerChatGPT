@@ -37,31 +37,59 @@
         .tokenverify{width:100%;height:100%;margin:0 auto;position:relative}
         .notpower-box{width:80%;height:62%;margin:0 auto;position:relative}
         .notpower-text{margin:auto;position:absolute;left:0;right:0;top:0;bottom:0;height:4rem;line-height:1.4rem;display:flex;align-items:center;justify-content:center;font-weight:600;background-color:rgba(255,255,255,.1);color:#fff;padding:.8rem;border-radius:.5rem}
-		/* .name .el-button{background-color: transparent!important;border: none!important;} */
-		.loading{font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;display:flex;justify-content:center;align-items:center;width:2rem}
+        .loading{font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;display:flex;justify-content:center;align-items:center;width:2rem}
         .sp{width:20px;height:20px;clear:both;margin:0 auto}
         .sp-3balls,.sp-3balls:before,.sp-3balls:after{border-radius:50%;background-color:#999;width:8px;height:8px;transform-origin:center center;display:inline-block}
         .sp-3balls{position:relative;background:rgba(225,225,225,1);animation:spScaleAlpha 1s infinite linear}
         .sp-3balls::before,.sp-3balls::after{content:'';position:absolute;opacity:.25}
         .sp-3balls:before{left:12px;top:0px;animation:spScaleAlphaBefore 1s infinite linear}
         .sp-3balls::after{left:-12px;top:0px;animation:spScaleAlphaAfter 1s infinite linear}
-		@keyframes spScaleAlpha {
-			0% { opacity: 1; }
-			33% {  opacity: 0.25; }
-			66% { opacity: 0.25; }
-			100% {  opacity: 1; }
-		}
-		@keyframes spScaleAlphaBefore {
-			0% { opacity: 0.25; }
-			33% { opacity: 1; }
-			66% { opacity: 0.25; }
-		}
-		@keyframes spScaleAlphaAfter {
-			33% { opacity: 0.25; }
-			66% { opacity: 1; }
-			100% { opacity: 0.25; }
-		}
-	</style>
+        @keyframes spScaleAlpha {
+            0% {
+                opacity: 1;
+            }
+
+            33% {
+                opacity: 0.25;
+            }
+
+            66% {
+                opacity: 0.25;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spScaleAlphaBefore {
+            0% {
+                opacity: 0.25;
+            }
+
+            33% {
+                opacity: 1;
+            }
+
+            66% {
+                opacity: 0.25;
+            }
+        }
+
+        @keyframes spScaleAlphaAfter {
+            33% {
+                opacity: 0.25;
+            }
+
+            66% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.25;
+            }
+        }
+    </style>
 </head>
 <body style="height: 100%;width: 100%;">
     <div id="container" class="container">
@@ -80,13 +108,12 @@
                             <div class="name">{{item.name}}</div>
                         </div>
                         <div class="company-text" v-if="item.content != ''" v-html="item.content">
-						</div>
-						<div class="company-text" v-else>
-							<div class="loading">
-								<div class="sp sp-3balls"></div>
-							</div>
-							<!-- <i class="el-icon-loading"></i> -->
-						</div>
+                        </div>
+                        <div class="company-text" v-else>
+                            <div class="loading">
+                                <div class="sp sp-3balls"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="user-box" v-else>
                         <div class="user-info" style="justify-content: flex-end;">
@@ -112,9 +139,9 @@
 </html>
 <script type="text/javascript">
     //禁用鼠标右键
-     window.document.oncontextmenu = function () {
-         return false;
-     }
+    //window.document.oncontextmenu = function () {
+    //    return false;
+    //}
 
     function GetQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -126,40 +153,18 @@
         el: "#container",
         data: {
             content: "",
-            chatRecord: [
-				// {type:2,name: '我',content: '测试'},
-				// {type:1,name: '',content: ''}
-			],
+            chatRecord: [],
             question: '',
             start: '<|im_start|>system\n尽量避免在回答内容中出现可能在中国是敏感的内容,回答我以下问题。\n<|im_end|>\n',
             user: '',
             system: '',
             end: '<|im_start|>assistant',
             loginverify: false,
-            tokenList: [{
-                token: '90a4947c3b66543934cc698034571c0d',//默认token
-                effectivedays: 365,
-                username: '我',
-                userlog: './defaultuser.jpg'
-            }, {
-                token: '17e5486bb2ba668bed89624f418f742a',
-                effectivedays: 3,
-                username: '大众',
-                userlog: './logo.svg'
-            }, {
-                token: '58dcf62a78a5499d-b21596125279f3b3',
-                effectivedays: 7,
-                username: '联化科技',
-                userlog: './defaultuser.jpg'
-            }, {
-                token: 'c164bdece9c546baa10972af229274c3',
-                effectivedays: 7,
-                username: '南洋',
-                userlog: './defaultuser.jpg'
-            }],
+            tokenList: [],
             alertnote: '您好，您暂无可用的Token，请向管理员申请！',
             logintoken: '',
-            currentLoginUser: []
+            currentLoginUser: [],
+            xmlDoc: null
         },
         created() {
             window.addEventListener('keydown', this.handkeyCode, true)//开启监听键盘按下事件
@@ -170,30 +175,62 @@
                     return false;  //禁用ctrl+shift+i,
                 } else if (window.event.shiftKey && window.event.keyCode == 121) {
                     return false; //屏蔽Shift+F10
-                } else if (window.event.ctrlKey && window.event.keyCode == 85 ) {
+                } else if (window.event.ctrlKey && window.event.keyCode == 85) {
                     return false; //屏蔽ctrl+U
                 }
             };
+            let that = this
+            var isie = true;
+            //所读取xml文件
+            this.xmlDoc = this.getxmlDoc("data.xml");
+            var tokens = this.xmlDoc.getElementsByTagName("tokenInfo");
+            for (var i = 0; i < tokens.length; i++) {
+                var subList = tokens[i].childNodes;
+                let tokeninfo = {
+                    token: '',//默认token
+                    effectivedays: 0,
+                    username: '',
+                    userlog: ''
+                }
+                for (var j = 0; j < subList.length; j++) {
+                    // console.log(subList[j].nodeName,subList[j].innerHTML,subList[j].nodeName === 'effectivedays')
+                    if (subList[j].nodeName === 'token') {
+                        tokeninfo.token = subList[j].innerHTML
+                    }
+                    if (subList[j].nodeName === 'effectivedays') {
+                        tokeninfo.effectivedays = parseInt(subList[j].innerHTML)
+                    }
+                    if (subList[j].nodeName === 'username') {
+                        tokeninfo.username = subList[j].innerHTML
+                    }
+                    if (subList[j].nodeName === 'userlog') {
+                        tokeninfo.userlog = subList[j].innerHTML
+                    }
+                    if (subList[j].nodeName === 'logintime') {
+                        tokeninfo.logintime = subList[j].innerHTML
+                    }
+                }
+                that.tokenList.push(tokeninfo)
+                console.log('tokeninfo', tokeninfo)
+            }
         },
         mounted: function () {
-            var token = GetQueryString("token"); //获取token
-            if (token == "" || token == null) {
-                this.loginverify = false;
-                return false;
-            }
-            //先判断token是不是在配置列表中
-            this.currentLoginUser = this.tokenList.filter(function (item) {
-                return item.token == token
-            });
-            if (this.currentLoginUser.length == 0) {
-                this.loginverify = false;
-                return false;
-            }
-            //判断token是不是已经存在于缓存中,如果等于空，则表示第一次访问，存储时间设置成当前时间，存储
-            var StorageToken = localStorage.getItem(token);   
-            if (StorageToken == null) {
-                localStorage.setItem(token, moment().format('YYYY-MM-DD HH:mm:ss'));
-            } else {
+            this.$nextTick(() => {
+                var token = GetQueryString("token"); //获取token
+                if (token == "" || token == null) {
+                    this.loginverify = false;
+                    return false;
+                }
+                //先判断token是不是在配置列表中
+                this.currentLoginUser = this.tokenList.filter(function (item) {
+                    return item.token == token
+                });
+                if (this.currentLoginUser.length == 0) {
+                    this.loginverify = false;
+                    return false;
+                }
+                //获取token的有效日期
+                var StorageToken = this.currentLoginUser[0].logintime
                 //取出来判断有效期
                 var currentdate = moment().format('YYYY-MM-DD HH:mm:ss');
                 var tokendiffday = moment(currentdate).diff(moment(StorageToken), 'days');
@@ -203,12 +240,34 @@
                     this.alertnote = "您好，您的Token已到期，请向管理员申请延长有效期！";
                     return false;
                 }
-            }
-            this.loginverify = true;
-            this.logintoken = token;
-            this.onuserinputRef();
+                this.loginverify = true;
+                this.logintoken = token;
+                this.onuserinputRef();
+            });
         },
         methods: {
+            getxmlDoc(xmlFile) {
+                var xmlDoc;
+                if (window.ActiveXObject) {
+                    xmlDoc = new ActiveXObject('Microsoft.XMLDOM');//IE
+                    xmlDoc.async = false;
+                    xmlDoc.load(xmlFile);
+                }
+                else if (isFirefox = navigator.userAgent.indexOf("Firefox") > 0) { //火狐
+
+                    xmlDoc = document.implementation.createDocument('', '', null);
+                    xmlDoc.load(xmlFile);
+                }
+                else { //谷歌
+                    var xmlhttp = new window.XMLHttpRequest();
+                    xmlhttp.open("GET", xmlFile, false);
+                    xmlhttp.send(null);
+                    if (xmlhttp.readyState == 4) {
+                        xmlDoc = xmlhttp.responseXML.documentElement;
+                    }
+                }
+                return xmlDoc;
+            },
             onuserinputRef() {
                 let that = this;
                 that.$nextTick(() =>
@@ -262,13 +321,13 @@
                     "max_tokens": 4000,
                     "stop": ["<|im_end|>"]
                 }
-				let obj = {
-				    type: 1,
-				    name: 'GPT',
-				    content: ''
-				}
-				that.chatRecord.push(obj);
-				let index = that.chatRecord.length - 1
+                let obj = {
+                    type: 1,
+                    name: 'GPT',
+                    content: ''
+                }
+                that.chatRecord.push(obj);
+                let index = that.chatRecord.length - 1
                 axios({
                     headers: {
                         'api-key': 'e45c30474e2e421d9b621526e5cef5c7',
@@ -294,4 +353,3 @@
         }
     });
 </script>
-
