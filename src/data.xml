@@ -29,4 +29,11 @@
   	<username>南洋</username>
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
+  <tokenInfo token="2dcafb1c5108b597764c26a6b7cffb94">
+  	<logintime>2023-04-13 00:00:00</logintime>
+  	<token>2dcafb1c5108b597764c26a6b7cffb94</token>
+  	<effectivedays>7</effectivedays>
+  	<username>斯凯孚</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
 </tokenList>
