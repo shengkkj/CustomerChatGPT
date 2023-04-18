@@ -36,4 +36,11 @@
   	<username>斯凯孚</username>
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
+  <tokenInfo token="eab3d39fb34d74a97d1ab6240482884c">
+  	<logintime>2023-04-18 09:00:00</logintime>
+  	<token>eab3d39fb34d74a97d1ab6240482884c</token>
+  	<effectivedays>7</effectivedays>
+  	<username>丹纳赫</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
 </tokenList>
