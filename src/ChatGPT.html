@@ -136,37 +136,38 @@
             };
         },
         mounted: function () {
-            var token = GetQueryString("token"); //获取token
-            if (token == "" || token == null) {
-                this.loginverify = false;
-                return false;
-            }
-            //先判断token是不是在配置列表中
-            this.currentLoginUser = this.tokenList.filter(function (item) {
-                return item.token == token
-            });
-            if (this.currentLoginUser.length == 0) {
-                this.loginverify = false;
-                return false;
-            }
-            //判断token是不是已经存在于缓存中,如果等于空，则表示第一次访问，存储时间设置成当前时间，存储
-            var StorageToken = localStorage.getItem(token);   
-            if (StorageToken == null) {
-                localStorage.setItem(token, moment().format('YYYY-MM-DD HH:mm:ss'));
-            } else {
-                //取出来判断有效期
-                var currentdate = moment().format('YYYY-MM-DD HH:mm:ss');
-                var tokendiffday = moment(currentdate).diff(moment(StorageToken), 'days');
-                var index = this.currentLoginUser.findIndex(item => item.effectivedays >= tokendiffday);
-                if (index == -1) {
-                    this.loginverify = false;
-                    this.alertnote = "您好，您的Token已到期，请向管理员申请延长有效期！";
-                    return false;
+            this.$nextTick(() => {
+                let params = {
+                    "Account": "1",
+                    "Password": "2"
                 }
-            }
-            this.loginverify = true;
-            this.logintoken = token;
-            this.onuserinputRef();
+                axios({
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: "post",
+                    url: "http://39.101.200.154:3001/CustomerOpenAI/ChatGPT/GetAccount",
+                    data: params
+                }).then(function (resp) {
+                    let data = resp.data;
+                    if (data.choices && data.choices.length > 0) {
+                        that.system = that.system + "<|im_start|>system\n" + data.choices[0].text + "\n<|im_end|>\n";
+                        let content = data.choices[0].text.substr(1);
+                        let str = content.replace(/\n\n/g, "\n");
+                        let obj = {
+                            type: 1,
+                            name: 'GPT',
+                            content: str
+                        }
+                        that.chatRecord.push(obj);
+                    }
+                    //localStorage.setItem("click-" + that.logintoken, parseInt(storageclicktimes) + 1);
+                    // 滚动到底部
+                    that.handleScrollBottom()
+                    //console.log(storageclicktimes);
+                })
+                this.onuserinputRef();
+            });  
         },
         methods: {
             onuserinputRef() {
