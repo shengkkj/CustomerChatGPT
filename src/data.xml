@@ -43,4 +43,11 @@
   	<username>丹纳赫</username>
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
+  <tokenInfo token="b771f5903d5c487f97bb0e32a0216ec0">
+  	<logintime>2023-05-23 09:00:00</logintime>
+  	<token>b771f5903d5c487f97bb0e32a0216ec0</token>
+  	<effectivedays>31</effectivedays>
+  	<username>资生堂</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
 </tokenList>
