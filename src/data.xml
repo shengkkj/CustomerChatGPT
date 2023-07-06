@@ -50,4 +50,11 @@
   	<username>资生堂</username>
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
+	 <tokenInfo token="E4FC18C2B6F64C9D809BD2574BB0EAA7">
+  	<logintime>2023-07-06 09:00:00</logintime>
+  	<token>E4FC18C2B6F64C9D809BD2574BB0EAA7</token>
+  	<effectivedays>7</effectivedays>
+  	<username>凯德</username>
+  	<userlog>./defaultuser.jpg</userlog>
+  </tokenInfo>
 </tokenList>
