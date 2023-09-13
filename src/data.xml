@@ -23,9 +23,9 @@
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
  <tokenInfo token="c164bdece9c546baa10972af229274c3">
-  	<logintime>2023-08-22 00:00:00</logintime>
+  	<logintime>2023-09-13 00:00:00</logintime>
   	<token>c164bdece9c546baa10972af229274c3</token>
-  	<effectivedays>14</effectivedays>
+  	<effectivedays>60</effectivedays>
   	<username>南洋</username>
   	<userlog>./defaultuser.jpg</userlog>
   </tokenInfo>
